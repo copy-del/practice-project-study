@@ -1,0 +1,2 @@
+# 스프링 부트의 모든 환경설정을 진행하는 파일
+spring.application.name=MyFirstSpringboot

@@ -1,0 +1,6 @@
+# 스프링 부트의 모든 환경설정을 진행하는 파일
+spring.application.name=MyFirstSpringboot
+
+# 서버의 포트번호를 변경
+server.port = 8090
+
