@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smhrd.web.mapper.BoardMapper">
+  
+  <select id="selectBoard" resultType="Board">
+    select * from board
+    order by indate desc
+  </select>
+  
+  <select id="search" parameterType="SearchCriteria" resultType="Board">
+  SELECT *
+  FROM board
+  <!-- where ${filter} LIKE '%'|| #{search} ||'%' 오류가 많기 떄문에 비추천--> 
+ 	<include refid="searchOption"/> 
+</select>
+  <sql id="searchOption">
+  	<if test="filter=='content'">
+   WHERE content LIKE '%'|| #{search} ||'%'
+   </if>
+   <if test="filter=='writer'">
+   WHERE writer LIKE '%'|| #{search} ||'%'
+   </if>
+    <if test="filter=='title'">
+   WHERE title LIKE '%'|| #{search} ||'%'
+   </if>
+  </sql>
+   <insert id="insertBoard" parameterType="Board">
+        INSERT INTO board(bnum, title, writer, content)
+        VALUES(board_num.nextval,#{title}, #{writer}, #{content})
+    </insert>
+    
+    
+</mapper>
