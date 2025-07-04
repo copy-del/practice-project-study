@@ -15,9 +15,13 @@ public class ViewController {
 		return"join";
 	}
 	
-	@GetMapping("/main")
-	public String main() {
-		return "main";
+	@GetMapping("userPage")
+	public String userPage() {
+		return "userPage";
 	}
 	
+	@GetMapping("admin")
+	public String admin() {
+		return "admin";
+	}
 }

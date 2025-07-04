@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import jakarta.servlet.DispatcherType;
@@ -45,22 +47,38 @@ public class SpringSecurityConfig {
 				// (3-1) forward를 사용하는 FC 접근허용
 				request.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
 				// (3-3) 매개변수로 들어간 url에 대해서는 접근 허용
-			.requestMatchers("/join","/images/**").permitAll()
+			.requestMatchers("/join","/images/**","/join-process").permitAll()
+			.requestMatchers("/admin").hasRole("admin")
+			.requestMatchers("/userPage").hasAnyRole("users","admin")
+			// hasRole -> 하나의 권한 | hasAnyRole -> 여러개 권한
 				// (3-2) 어떤 요청이든 인증된 사용자만 접근 허용
 						.anyRequest().authenticated();
 			})
 			// 4. 내가 원하는 인증 페이지로 넘기고 싶을 때, 설정
 			.formLogin(login->{
-				login.loginPage("/").permitAll();
-			});
-	
-		
-		
-		
-		
-		
+				login.loginPage("/")
+				.loginProcessingUrl("/login-process")
+				// 인증받을 사용자 정보를 mapping 시키기
+				.usernameParameter("id")
+				.passwordParameter("pw")
+				.defaultSuccessUrl("/main",true)				
+				.permitAll();
+			});		
 		
 				return http.build();
 	}
 
+	
+		// DB에 있는 사용자 정보를 가져오려면 기본적으로 암호를 복호화할 수 있는 Encoder 필요함
+		@Bean
+		public PasswordEncoder passwordEncoder() {
+			// -> 이미 잘 만들어진 BCrypt 암호화 기술을 적용하고 있는 인코딩 호출
+			return new BCryptPasswordEncoder();
+			// 내가 커스터마이징한 encoder를 쓰고 싶다면, 따로 파일을 작성
+		}
+	
+	
+	
+	
+	
 }

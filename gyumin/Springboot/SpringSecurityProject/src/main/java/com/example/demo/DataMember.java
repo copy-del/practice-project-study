@@ -1,17 +1,22 @@
 package com.example.demo;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity // 엔티티 클래스임을 나타내는 annotation
 // 해당하는 클래스가 datamember 테이블을 나타내는 클래스임을 표시
 @Table(name="datamember") // (선택)
+@AllArgsConstructor
+@NoArgsConstructor
 public class DataMember {
 	// DB 테이블 자체를 의미하는 클래스
 	
@@ -27,6 +32,13 @@ public class DataMember {
 	@Column(insertable = false)
 	private String roles;
 
+	
+	
+	public static DataMember createMember(String id, String pw, String roles, PasswordEncoder encoder ) {
+	
+					return new DataMember(id, encoder.encode(pw), roles);
+		
+	}
 
 
 
